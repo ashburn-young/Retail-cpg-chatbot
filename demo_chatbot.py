@@ -261,7 +261,7 @@ try:
     print(f"   GET  /health - Health check")
     print(f"   GET  /analytics - Conversation analytics")
     print(f"   GET  /docs - Interactive API documentation")
-    print(f"   GET  /context/{session_id} - Get conversation context")
+    print(f"   GET  /context/{{{{session_id}}}} - Get conversation context")
     
     print(f"\n🔗 Integration Points")
     print("=" * 60)
