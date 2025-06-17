@@ -13,7 +13,8 @@ Security Best Practices:
 
 import os
 from typing import Dict, List, Optional
-from pydantic import BaseSettings, Field, validator
+from pydantic import Field, validator
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -59,6 +60,30 @@ class Settings(BaseSettings):
     )
     
     # =============================================================================
+    # DEVELOPMENT SETTINGS
+    # =============================================================================
+    
+    DEV_MODE: bool = Field(
+        default=False,
+        description="Enable development features"
+    )
+    
+    USE_MOCK_SERVICES: bool = Field(
+        default=False,
+        description="Use mock services for development"
+    )
+    
+    LOG_REQUESTS: bool = Field(
+        default=False,
+        description="Enable request/response logging"
+    )
+    
+    DEV_CORS_ALL_ORIGINS: bool = Field(
+        default=False,
+        description="Enable CORS for all origins in development"
+    )
+
+    # =============================================================================
     # SECURITY SETTINGS
     # =============================================================================
     
@@ -72,9 +97,9 @@ class Settings(BaseSettings):
         description="JWT secret key for token signing"
     )
     
-    ALLOWED_ORIGINS: List[str] = Field(
-        default=["*"],
-        description="CORS allowed origins"
+    ALLOWED_ORIGINS: str = Field(
+        default="*",
+        description="CORS allowed origins (comma-separated)"
     )
     
     RATE_LIMIT_PER_MINUTE: int = Field(
@@ -382,6 +407,23 @@ class Settings(BaseSettings):
             raise ValueError(f'Log level must be one of: {allowed_levels}')
         return v.upper()
     
+    @validator('ALLOWED_ORIGINS', pre=True)
+    def validate_allowed_origins(cls, v):
+        """Parse comma-separated origins"""
+        if isinstance(v, str):
+            return v
+        elif isinstance(v, list):
+            return ",".join(v)
+        else:
+            return "*"
+    
+    @property
+    def allowed_origins_list(self) -> List[str]:
+        """Get ALLOWED_ORIGINS as a list"""
+        if self.ALLOWED_ORIGINS == "*":
+            return ["*"]
+        return [origin.strip() for origin in self.ALLOWED_ORIGINS.split(',') if origin.strip()]
+
     class Config:
         """Pydantic configuration"""
         env_prefix = "CHATBOT_"
