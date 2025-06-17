@@ -6,22 +6,23 @@ This module contains comprehensive tests for all chatbot components
 including NLU, response generation, context management, and backend integration.
 """
 
-import pytest
 import asyncio
 from datetime import datetime
-from typing import Dict, Any
+from typing import Any, Dict
 
-# Import the modules to test
-from app import app
-from modules.nlu import NLUProcessor
-from modules.response import ResponseGenerator
-from modules.context import ContextManager
-from modules.integration import BackendIntegrator
-from modules.analytics import AnalyticsLogger
-from config.settings import Settings
+import pytest
 
 # Test client
 from fastapi.testclient import TestClient
+
+# Import the modules to test
+from app import app
+from config.settings import Settings
+from modules.analytics import AnalyticsLogger
+from modules.context import ContextManager
+from modules.integration import BackendIntegrator
+from modules.nlu import NLUProcessor
+from modules.response import ResponseGenerator
 
 
 # Test configuration

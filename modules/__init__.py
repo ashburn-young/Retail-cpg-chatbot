@@ -16,12 +16,13 @@ Each module is designed to be modular and independently testable.
 __version__ = "1.0.0"
 __author__ = "AI Agent Template"
 
+from .analytics import AnalyticsLogger
+from .context import ContextManager
+from .integration import BackendIntegrator
+
 # Import main classes for easy access
 from .nlu import NLUProcessor
 from .response import ResponseGenerator
-from .context import ContextManager
-from .integration import BackendIntegrator
-from .analytics import AnalyticsLogger
 
 __all__ = [
     "NLUProcessor",

@@ -15,12 +15,12 @@ Features:
 - A/B testing capability for response optimization
 """
 
-import re
 import logging
 import random
-from typing import Dict, Any, List, Optional, Union
+import re
 from datetime import datetime, timedelta
 from string import Template
+from typing import Any, Dict, List, Optional, Union
 
 from config.settings import Settings
 
@@ -559,6 +559,7 @@ class ResponseGenerator:
 # Example usage and testing
 if __name__ == "__main__":
     import asyncio
+
     from config.settings import Settings
 
     async def test_response_generator():

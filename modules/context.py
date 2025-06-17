@@ -15,13 +15,13 @@ Features:
 - Context analytics and insights
 """
 
+import asyncio
 import json
 import logging
-import asyncio
-from typing import Dict, Any, List, Optional, Union
-from datetime import datetime, timedelta
-from dataclasses import dataclass, asdict
 from abc import ABC, abstractmethod
+from dataclasses import asdict, dataclass
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional, Union
 
 from config.settings import Settings
 
@@ -594,6 +594,7 @@ class ContextManager:
 # Example usage and testing
 if __name__ == "__main__":
     import asyncio
+
     from config.settings import Settings
 
     async def test_context_manager():

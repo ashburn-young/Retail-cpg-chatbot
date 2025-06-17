@@ -7,9 +7,9 @@ This script demonstrates the chatbot functionality without running the full web 
 It shows the core NLU, response generation, and conversation flow.
 """
 
+import asyncio
 import os
 import sys
-import asyncio
 from datetime import datetime
 
 # Add current directory to Python path

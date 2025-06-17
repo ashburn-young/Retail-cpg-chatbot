@@ -21,23 +21,24 @@ Version: 1.0.0
 
 import logging
 import uuid
-from datetime import datetime
-from typing import Dict, Any, Optional
 from contextlib import asynccontextmanager
+from datetime import datetime
+from typing import Any, Dict, Optional
 
-from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, Field
+
+from config.settings import Settings
+from modules.analytics import AnalyticsLogger
+from modules.context import ContextManager
+from modules.integration import BackendIntegrator
 
 # Import our custom modules
 from modules.nlu import NLUProcessor
 from modules.response import ResponseGenerator
-from modules.context import ContextManager
-from modules.integration import BackendIntegrator
-from modules.analytics import AnalyticsLogger
-from config.settings import Settings
 
 # Global variables (initialized in lifespan)
 settings = None

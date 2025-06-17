@@ -18,17 +18,17 @@ Features:
 - Secure API key management
 """
 
+import asyncio
 import json
 import logging
-import asyncio
-from typing import Dict, Any, List, Optional, Union
-from datetime import datetime, timedelta
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from enum import Enum
+from typing import Any, Dict, List, Optional, Union
 
 import aiohttp
-from aiohttp import ClientTimeout, ClientError
+from aiohttp import ClientError, ClientTimeout
 
 from config.settings import Settings
 
@@ -783,6 +783,7 @@ class BackendIntegrator:
 # Example usage and testing
 if __name__ == "__main__":
     import asyncio
+
     from config.settings import Settings
 
     async def test_backend_integrator():

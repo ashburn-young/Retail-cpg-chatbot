@@ -19,10 +19,10 @@ Dependencies:
 - Machine learning models for intent classification
 """
 
-import re
 import logging
-from typing import Dict, Any, List, Optional, Tuple
+import re
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple
 
 import spacy
 from spacy.matcher import Matcher
@@ -495,6 +495,7 @@ class NLUProcessor:
 # Example usage and testing
 if __name__ == "__main__":
     import asyncio
+
     from config.settings import Settings
 
     async def test_nlu():

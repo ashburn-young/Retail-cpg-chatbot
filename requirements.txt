@@ -58,6 +58,7 @@ httpx>=0.25.0,<1.0.0  # Async HTTP client for testing
 # Development dependencies
 black>=23.11.0,<26.0.0  # Code formatting - updated version range
 flake8>=6.1.0,<7.0.0  # Linting
+isort>=5.12.0,<6.0.0  # Import sorting
 mypy>=1.7.0,<2.0.0  # Type checking
 
 # Documentation (optional)

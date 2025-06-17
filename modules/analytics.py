@@ -15,14 +15,14 @@ Features:
 - Privacy-compliant data handling
 """
 
+import asyncio
 import json
 import logging
-import asyncio
-from typing import Dict, Any, List, Optional, Union
+from collections import Counter, defaultdict
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from dataclasses import dataclass, asdict
-from collections import defaultdict, Counter
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
 
 from config.settings import Settings
 
@@ -568,6 +568,7 @@ class AnalyticsLogger:
 # Example usage and testing
 if __name__ == "__main__":
     import asyncio
+
     from config.settings import Settings
 
     async def test_analytics_logger():

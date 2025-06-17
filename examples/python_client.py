@@ -12,14 +12,15 @@ Usage:
     python python_client.py --test-scenarios
 """
 
-import asyncio
-import aiohttp
-import json
-import uuid
 import argparse
+import asyncio
+import json
 import time
-from typing import Dict, Any, Optional
+import uuid
 from datetime import datetime
+from typing import Any, Dict, Optional
+
+import aiohttp
 
 
 class ChatbotClient:

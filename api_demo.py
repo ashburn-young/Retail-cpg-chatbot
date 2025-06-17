@@ -9,18 +9,18 @@ It shows key functionality including NLU processing, response generation, and co
 
 import asyncio
 import json
-import sys
 import os
+import sys
 from datetime import datetime
-from typing import Dict, Any
+from typing import Any, Dict
 
 # Add the project root to Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from config.settings import Settings
+from modules.context import ContextManager
 from modules.nlu import NLUProcessor
 from modules.response import ResponseGenerator
-from modules.context import ContextManager
-from config.settings import Settings
 
 
 class ChatbotAPIDemo:
