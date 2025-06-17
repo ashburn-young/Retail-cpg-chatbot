@@ -1,0 +1,226 @@
+name: 🚀 Retail CPG Chatbot CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+
+jobs:
+  test:
+    name: 🧪 Test & Quality Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: 📦 Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          
+    - name: ⬇️ Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        python -m spacy download en_core_web_sm
+        
+    - name: 🔍 Run linting
+      run: |
+        pip install flake8 black isort
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        
+    - name: ✨ Check code formatting
+      run: |
+        black --check .
+        isort --check-only .
+        
+    - name: 🛡️ Security check
+      run: |
+        pip install bandit safety
+        bandit -r . -f json -o bandit-report.json || true
+        safety check
+        
+    - name: 🧪 Run tests
+      run: |
+        pip install pytest pytest-cov pytest-asyncio
+        pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
+        
+    - name: 📊 Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  docker:
+    name: 🐳 Docker Build & Test
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🐳 Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: 🏗️ Build Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: false
+        tags: retail-cpg-chatbot:test
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        
+    - name: 🔍 Test Docker image
+      run: |
+        docker run --rm -d --name test-chatbot -p 8000:8000 retail-cpg-chatbot:test
+        sleep 10
+        # Test health endpoint
+        curl -f http://localhost:8000/health || exit 1
+        docker stop test-chatbot
+
+  security:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🔍 Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+        
+    - name: 📊 Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  deploy-staging:
+    name: 🚀 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [test, docker, security]
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🏗️ Build and push Docker image
+      run: |
+        echo "Building and deploying to staging environment..."
+        # Add your staging deployment commands here
+        
+  deploy-production:
+    name: 🌟 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [test, docker, security]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🌟 Deploy to production
+      run: |
+        echo "Deploying to production environment..."
+        # Add your production deployment commands here
+        
+    - name: 📢 Notify deployment
+      run: |
+        echo "Production deployment completed successfully!"
+        # Add notification logic here (Slack, email, etc.)
+
+  performance:
+    name: ⚡ Performance Test
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: ⚡ Run performance tests
+      run: |
+        pip install -r requirements.txt
+        python -m spacy download en_core_web_sm
+        # Start the application in background
+        python app.py &
+        sleep 10
+        # Run performance tests
+        python examples/python_client.py --test-scenarios
+        
+  release:
+    name: 🏷️ Create Release
+    runs-on: ubuntu-latest
+    needs: [test, docker, security]
+    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[release]')
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: 🏷️ Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          🎉 New release of Retail & CPG Customer Service Chatbot
+          
+          ## Changes
+          ${{ github.event.head_commit.message }}
+          
+          ## Features
+          - ✨ FastAPI-based async web framework
+          - 🧠 spaCy NLU for intent classification
+          - 🐳 Docker containerization
+          - ☁️ Cloud-ready deployment
+          - 🧪 Comprehensive testing
+          - 📊 Production monitoring
+          
+          ## Quick Start
+          ```bash
+          git clone https://github.com/${{ github.repository }}
+          cd Retail-cpg-chatbot
+          make install
+          make run
+          ```
+        draft: false
+        prerelease: false
