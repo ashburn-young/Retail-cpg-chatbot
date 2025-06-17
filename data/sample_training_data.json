@@ -1,0 +1,110 @@
+[
+  {
+    "message": "I want to track my order AB12345678",
+    "expected_intent": "track_order",
+    "expected_entities": ["order_number"],
+    "description": "Order tracking with specific order number"
+  },
+  {
+    "message": "What's the status of order #CD98765432?",
+    "expected_intent": "track_order", 
+    "expected_entities": ["order_number"],
+    "description": "Order status inquiry with hash symbol"
+  },
+  {
+    "message": "Can you tell me about the iPhone 13?",
+    "expected_intent": "product_info",
+    "expected_entities": ["products"],
+    "description": "Product information request"
+  },
+  {
+    "message": "What are the specs of the Samsung Galaxy S23?",
+    "expected_intent": "product_info",
+    "expected_entities": ["products"],
+    "description": "Product specifications inquiry"
+  },
+  {
+    "message": "Is the MacBook Pro in stock?",
+    "expected_intent": "inventory_check",
+    "expected_entities": ["products"],
+    "description": "Stock availability check"
+  },
+  {
+    "message": "Do you have any organic bananas available?",
+    "expected_intent": "inventory_check",
+    "expected_entities": ["products"],
+    "description": "Grocery item availability"
+  },
+  {
+    "message": "Where is your nearest store?",
+    "expected_intent": "store_locator",
+    "expected_entities": [],
+    "description": "Store location inquiry"
+  },
+  {
+    "message": "Find stores near 90210",
+    "expected_intent": "store_locator",
+    "expected_entities": ["locations"],
+    "description": "Store search by ZIP code"
+  },
+  {
+    "message": "How much does the iPhone cost?",
+    "expected_intent": "pricing",
+    "expected_entities": ["products"],
+    "description": "Price inquiry"
+  },
+  {
+    "message": "What's the price range for laptops under $1000?",
+    "expected_intent": "pricing",
+    "expected_entities": ["products", "prices"],
+    "description": "Price range inquiry"
+  },
+  {
+    "message": "I have a complaint about my recent purchase",
+    "expected_intent": "complaint",
+    "expected_entities": [],
+    "description": "Customer complaint"
+  },
+  {
+    "message": "The product I received was damaged",
+    "expected_intent": "complaint",
+    "expected_entities": [],
+    "description": "Product quality complaint"
+  },
+  {
+    "message": "What are your shipping options?",
+    "expected_intent": "shipping_info",
+    "expected_entities": [],
+    "description": "Shipping information inquiry"
+  },
+  {
+    "message": "How long does delivery take?",
+    "expected_intent": "shipping_info",
+    "expected_entities": [],
+    "description": "Delivery time question"
+  },
+  {
+    "message": "I need help with my account login",
+    "expected_intent": "account_help",
+    "expected_entities": [],
+    "description": "Account assistance request"
+  },
+  {
+    "message": "How do I reset my password?",
+    "expected_intent": "account_help",
+    "expected_entities": [],
+    "description": "Password reset help"
+  },
+  {
+    "message": "Hello, can you help me?",
+    "expected_intent": "general_inquiry",
+    "expected_entities": [],
+    "description": "General greeting and help request"
+  },
+  {
+    "message": "What services do you offer?",
+    "expected_intent": "general_inquiry",
+    "expected_entities": [],
+    "description": "General service inquiry"
+  }
+]
