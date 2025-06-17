@@ -56,7 +56,11 @@ A comprehensive AI-powered customer service chatbot template designed specifical
 
 3. **Install dependencies**
    ```bash
+   # For full functionality with all optional features
    pip install -r requirements.txt
+   
+   # OR for minimal setup (CI/CD, basic functionality)
+   pip install -r requirements-minimal.txt
    ```
 
 4. **Download the spaCy model**
