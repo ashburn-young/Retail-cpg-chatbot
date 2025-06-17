@@ -19,7 +19,6 @@ Author: AI Agent Template
 Version: 1.0.0
 """
 
-import os
 import logging
 import uuid
 from datetime import datetime
@@ -39,6 +38,14 @@ from modules.context import ContextManager
 from modules.integration import BackendIntegrator
 from modules.analytics import AnalyticsLogger
 from config.settings import Settings
+
+# Global variables (initialized in lifespan)
+settings = None
+nlu_processor = None
+response_generator = None
+context_manager = None
+backend_integrator = None
+analytics_logger = None
 
 # Configure logging
 logging.basicConfig(
@@ -166,7 +173,7 @@ app.add_middleware(
 # Security dependency
 async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Verify API token for secured endpoints"""
-    if settings.API_KEY and credentials.credentials != settings.API_KEY:
+    if settings and settings.API_KEY and credentials.credentials != settings.API_KEY:
         raise HTTPException(status_code=401, detail="Invalid API key")
     return credentials.credentials
 
@@ -223,6 +230,10 @@ async def chat(
     6. Determines if human escalation is needed
     """
     try:
+        # Check if components are initialized
+        if not all([nlu_processor, response_generator, context_manager, backend_integrator, analytics_logger]):
+            raise HTTPException(status_code=503, detail="Service not fully initialized")
+            
         # Generate session ID if not provided
         session_id = message.session_id or str(uuid.uuid4())
         
@@ -320,7 +331,7 @@ async def chat(
                 message=message.message,
                 client_ip=client_ip
             )
-        except:
+        except Exception:
             pass
         
         raise HTTPException(
@@ -335,6 +346,8 @@ async def get_analytics_summary(
 ):
     """Get analytics summary for the specified time period"""
     try:
+        if not analytics_logger:
+            raise HTTPException(status_code=503, detail="Analytics logger not initialized")
         summary = await analytics_logger.get_summary(hours=hours)
         return summary
     except Exception as e:
@@ -348,6 +361,8 @@ async def clear_context(
 ):
     """Clear conversation context for a specific session"""
     try:
+        if not context_manager:
+            raise HTTPException(status_code=503, detail="Context manager not initialized")
         await context_manager.clear_context(session_id)
         return {"message": f"Context cleared for session {session_id}"}
     except Exception as e:
@@ -358,6 +373,8 @@ async def clear_context(
 async def get_supported_intents(token: str = Depends(verify_token)):
     """Get list of supported intents"""
     try:
+        if not nlu_processor:
+            raise HTTPException(status_code=503, detail="NLU processor not initialized")
         intents = nlu_processor.get_supported_intents()
         return {"intents": intents}
     except Exception as e:
