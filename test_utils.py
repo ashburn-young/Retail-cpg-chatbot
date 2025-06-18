@@ -47,6 +47,26 @@ def create_test_app():
     async def health():
         return {"status": "healthy", "mode": "test"}
 
+    # Add root endpoint
+    @app.get("/")
+    async def root():
+        return {
+            "message": "Retail & CPG Customer Service Chatbot API",
+            "version": "1.0.0-test",
+            "status": "running",
+        }
+
+    # Add basic chat endpoint for testing
+    @app.post("/chat")
+    async def chat(request: dict):
+        # Simple mock response for testing
+        return {
+            "response": "This is a test response",
+            "confidence": 0.9,
+            "intent": "test_intent",
+            "session_id": request.get("session_id", "test_session"),
+        }
+
     return app
 
 
@@ -57,3 +77,133 @@ def get_test_settings():
     os.environ.setdefault("DEBUG", "true")
 
     return Settings()
+
+
+# Mock classes for testing that don't require complex initialization
+class MockNLUProcessor:
+    """Mock NLU processor for testing"""
+
+    def __init__(self, settings):
+        self.settings = settings
+
+    async def initialize(self):
+        pass
+
+    async def process(self, message: str):
+        return {
+            "intent": "test_intent",
+            "entities": {},
+            "confidence": 0.9,
+            "message": message,
+        }
+
+
+class MockResponseGenerator:
+    """Mock response generator for testing"""
+
+    def __init__(self, settings):
+        self.settings = settings
+
+    async def generate_response(self, intent, entities, context, backend_data):
+        return {
+            "response": f"Mock response for intent: {intent}",
+            "confidence": 0.9,
+            "escalate": intent == "complaint",
+        }
+
+
+class MockContextManager:
+    """Mock context manager for testing"""
+
+    def __init__(self, settings):
+        self.settings = settings
+        self.contexts = {}
+
+    async def initialize(self):
+        pass
+
+    async def get_context(self, session_id):
+        if session_id not in self.contexts:
+            self.contexts[session_id] = {"session_id": session_id, "messages": []}
+        return self.contexts[session_id]
+
+    async def update_context(self, session_id, updates):
+        context = await self.get_context(session_id)
+        context.update(updates)
+
+    async def cleanup(self):
+        pass
+
+
+class MockBackendIntegrator:
+    """Mock backend integrator for testing"""
+
+    def __init__(self, settings):
+        self.settings = settings
+
+    async def initialize(self):
+        pass
+
+    async def process_request(self, intent, entities, context, customer_id=None):
+        return {"success": True, "data": f"Mock data for {intent}", "intent": intent}
+
+    async def get_health_status(self):
+        return {"status": "healthy", "services": ["mock"]}
+
+    async def cleanup(self):
+        pass
+
+
+class MockAnalyticsLogger:
+    """Mock analytics logger for testing"""
+
+    def __init__(self, settings):
+        self.settings = settings
+        self.logs = []
+
+    async def initialize(self):
+        pass
+
+    async def log_interaction(
+        self,
+        session_id,
+        customer_id,
+        message,
+        intent,
+        confidence,
+        response,
+        response_time=None,
+    ):
+        self.logs.append(
+            {
+                "type": "interaction",
+                "session_id": session_id,
+                "customer_id": customer_id,
+                "message": message,
+                "intent": intent,
+                "confidence": confidence,
+                "response": response,
+                "response_time": response_time,
+            }
+        )
+
+    async def log_error(self, session_id, error, message):
+        self.logs.append(
+            {
+                "type": "error",
+                "session_id": session_id,
+                "error": error,
+                "message": message,
+            }
+        )
+
+    async def get_analytics_summary(self):
+        return {
+            "total_interactions": len(
+                [l for l in self.logs if l["type"] == "interaction"]
+            ),
+            "total_errors": len([l for l in self.logs if l["type"] == "error"]),
+        }
+
+    async def cleanup(self):
+        pass
