@@ -90,8 +90,25 @@ class MockNLUProcessor:
         pass
 
     async def process(self, message: str):
+        # Simple intent mapping for testing
+        message_lower = message.lower()
+        intent = "unknown"
+
+        if "track" in message_lower and "order" in message_lower:
+            intent = "track_order"
+        elif "price" in message_lower or "pricing" in message_lower:
+            intent = "pricing"
+        elif "stock" in message_lower or "available" in message_lower:
+            intent = "inventory_check"
+        elif "store" in message_lower:
+            intent = "store_locator"
+        elif "complaint" in message_lower:
+            intent = "complaint"
+        elif "account" in message_lower:
+            intent = "account_help"
+
         return {
-            "intent": "test_intent",
+            "intent": intent,
             "entities": {},
             "confidence": 0.9,
             "message": message,
