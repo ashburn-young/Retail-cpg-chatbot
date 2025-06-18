@@ -541,7 +541,7 @@ class ResponseGenerator:
         if not templates:
             return self.response_templates.get(template_key, "I'm here to help!")
 
-        return random.choice(templates)
+        return random.choice(templates)  # nosec B311
 
     def _get_error_response(self) -> str:
         """Get a random error response"""

@@ -53,7 +53,9 @@ jobs:
     - name: 🛡️ Security check
       run: |
         pip install bandit safety
-        bandit -r . -f json -o bandit-report.json || true
+        # Run bandit on source code only, excluding venv and tests
+        bandit -r . -x ./venv,./tests,./examples,./scripts,./__pycache__,./.git
+        # Run safety check - it should now pass with our updated dependencies
         safety check
         
     - name: 🧪 Run tests

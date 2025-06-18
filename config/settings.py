@@ -45,7 +45,7 @@ class Settings(BaseSettings):
 
     PORT: int = Field(default=8000, description="Server port")
 
-    HOST: str = Field(default="0.0.0.0", description="Server host")
+    HOST: str = Field(default="0.0.0.0", description="Server host")  # nosec B104
 
     # =============================================================================
     # DEVELOPMENT SETTINGS

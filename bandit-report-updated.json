@@ -1,0 +1,7 @@
+[main]	INFO	Found project level .bandit file: ./.bandit
+[main]	INFO	Using command line arg for config file
+[main]	INFO	Using ini file for skipped tests
+[main]	INFO	Using command line arg for selected targets
+[config]	ERROR	expected '<document start>', but found '<scalar>'
+  in ".bandit", line 3, column 1
+[main]	ERROR	.bandit : Error parsing file.

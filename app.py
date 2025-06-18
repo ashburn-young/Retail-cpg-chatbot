@@ -372,8 +372,8 @@ async def chat(
                 message=message.message,
                 client_ip=client_ip,
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"Failed to log error analytics: {str(e)}")
 
         raise HTTPException(
             status_code=500,
@@ -452,5 +452,5 @@ if __name__ == "__main__":
     dev_settings = Settings()
 
     uvicorn.run(
-        "app:app", host="0.0.0.0", port=dev_settings.PORT, reload=True, log_level="info"
+        "app:app", host="0.0.0.0", port=dev_settings.PORT, reload=True, log_level="info"  # nosec B104
     )

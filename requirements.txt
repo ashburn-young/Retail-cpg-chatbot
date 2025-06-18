@@ -2,11 +2,11 @@
 # ===================================================
 
 # Core Web Framework
-fastapi>=0.104.0,<0.110.0
+fastapi>=0.115.0,<0.116.0
 uvicorn[standard]>=0.24.0,<0.30.0
 
-# HTTP Client for API calls
-aiohttp>=3.9.0,<4.0.0
+# HTTP Client for API calls (patched for security vulnerabilities)
+aiohttp>=3.10.11,<4.0.0
 
 # Data validation and settings management
 pydantic[email]>=2.5.0,<3.0.0
@@ -48,6 +48,11 @@ prometheus-client>=0.19.0,<1.0.0  # Metrics collection
 
 # Security enhancements (optional)
 cryptography>=41.0.0  # Encryption support - flexible version
+
+# Security fixes for vulnerabilities
+starlette>=0.40.0,<0.47.0  # Fix DoS vulnerabilities CVE-2024-47874 and PVE-2024-68094, compatible with FastAPI
+anyio>=4.4.0,<5.0.0  # Fix thread race condition PVE-2024-71199  
+setuptools>=78.1.1,<81.0.0  # Fix Path Traversal vulnerabilities CVE-2025-47273 and CVE-2024-6345
 python-jose[cryptography]>=3.3.0,<4.0.0  # JWT tokens
 
 # Testing dependencies

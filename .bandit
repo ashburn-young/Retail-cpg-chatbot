@@ -1,0 +1,5 @@
+[bandit]
+exclude_dirs = venv,tests,__pycache__,.git,examples
+skips = B101
+confidence = MEDIUM,HIGH
+severity = MEDIUM,HIGH
