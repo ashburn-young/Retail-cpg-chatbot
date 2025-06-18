@@ -7,6 +7,7 @@ that don't trigger the full async lifespan during test collection.
 """
 
 import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 

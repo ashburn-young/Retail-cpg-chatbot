@@ -15,9 +15,6 @@ import pytest
 # Test client
 from fastapi.testclient import TestClient
 
-# Import test utilities instead of the main app to avoid lifespan issues
-from test_utils import create_test_app, get_test_settings
-
 # Import the modules to test individually
 from config.settings import Settings
 from modules.analytics import AnalyticsLogger
@@ -25,6 +22,9 @@ from modules.context import ContextManager
 from modules.integration import BackendIntegrator
 from modules.nlu import NLUProcessor
 from modules.response import ResponseGenerator
+
+# Import test utilities instead of the main app to avoid lifespan issues
+from test_utils import create_test_app, get_test_settings
 
 
 # Test configuration
