@@ -33,13 +33,17 @@ RUN groupadd -r appuser && useradd -r -g appuser appuser
 COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
 # Download spaCy English model
 RUN python -m spacy download en_core_web_sm
 
 # Copy application code
 COPY . .
+
+# Install the package in editable mode for proper imports
+RUN pip install -e .
 
 # Create necessary directories
 RUN mkdir -p logs data \
