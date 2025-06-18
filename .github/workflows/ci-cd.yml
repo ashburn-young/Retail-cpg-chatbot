@@ -39,8 +39,8 @@ jobs:
         python -m spacy download en_core_web_sm
         # Install the package in development mode for tests
         pip install -e .
-        # Verify the installation worked
-        python -c "import app; print('✅ App module import successful')"
+        # Verify the installation worked with test utilities
+        ENVIRONMENT=test API_KEY=test-key python -c "import test_utils; print('✅ Test setup successful')"
         
     - name: 🔍 Run linting
       run: |
@@ -64,10 +64,14 @@ jobs:
         safety check
         
     - name: 🧪 Run tests
+      env:
+        ENVIRONMENT: test
+        API_KEY: test-api-key
+        DEBUG: true
       run: |
         pip install pytest pytest-cov pytest-asyncio
         # Verify the package is properly installed
-        python -c "import app; print('✅ App module available for tests')"
+        python -c "import test_utils; print('✅ Test utilities available')"
         # Run tests with explicit discovery and path setup
         python -m pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
         
