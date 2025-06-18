@@ -37,6 +37,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements-minimal.txt
         python -m spacy download en_core_web_sm
+        # Install the package in development mode for tests
+        pip install -e .
         
     - name: 🔍 Run linting
       run: |
@@ -62,7 +64,8 @@ jobs:
     - name: 🧪 Run tests
       run: |
         pip install pytest pytest-cov pytest-asyncio
-        pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
+        # Add current directory to Python path and run tests
+        PYTHONPATH=. pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
         
     - name: 📊 Upload coverage to Codecov
       uses: codecov/codecov-action@v3

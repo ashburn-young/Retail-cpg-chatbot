@@ -389,7 +389,7 @@ class Settings(BaseSettings):
     @validator("ENVIRONMENT")
     def validate_environment(cls, v):
         """Validate environment setting"""
-        allowed_environments = ["development", "staging", "production"]
+        allowed_environments = ["development", "staging", "production", "test"]
         if v not in allowed_environments:
             raise ValueError(f"Environment must be one of: {allowed_environments}")
         return v
