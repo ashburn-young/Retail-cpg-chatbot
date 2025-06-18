@@ -39,6 +39,8 @@ jobs:
         python -m spacy download en_core_web_sm
         # Install the package in development mode for tests
         pip install -e .
+        # Verify the installation worked
+        python -c "import app; print('✅ App module import successful')"
         
     - name: 🔍 Run linting
       run: |
@@ -64,8 +66,10 @@ jobs:
     - name: 🧪 Run tests
       run: |
         pip install pytest pytest-cov pytest-asyncio
-        # Add current directory to Python path and run tests
-        PYTHONPATH=. pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
+        # Verify the package is properly installed
+        python -c "import app; print('✅ App module available for tests')"
+        # Run tests with explicit discovery and path setup
+        python -m pytest tests/ -v --cov=. --cov-report=xml --cov-report=html
         
     - name: 📊 Upload coverage to Codecov
       uses: codecov/codecov-action@v3
