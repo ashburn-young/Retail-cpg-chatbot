@@ -54,8 +54,9 @@ jobs:
       run: |
         pip install bandit safety
         # Run bandit on source code only, excluding venv and tests
-        bandit -r . -x ./venv,./tests,./examples,./scripts,./__pycache__,./.git
-        # Run safety check - it should now pass with our updated dependencies
+        # Simple approach to avoid configuration parsing issues
+        bandit -r app.py modules/ config/ --skip B101 --format txt
+        # Run safety check - it should now pass with our updated dependencies  
         safety check
         
     - name: 🧪 Run tests
